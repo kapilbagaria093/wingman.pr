@@ -57,4 +57,3 @@ export async function handleGithubWebhook(request: Request){
     return Response.json({ received: true })
 }
 
-/////// random stuff
