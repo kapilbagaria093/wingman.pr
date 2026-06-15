@@ -12,6 +12,12 @@ export const auth = betterAuth({
         github: {
             clientId: process.env.GITHUB_CLIENT_ID as string,
             clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+
+            // while using github app, sometimes it might not have access to profile.email (profile is specific to github oauth)
+            mapProfileToUser: async(profile) => ({
+                email: profile.email ?? `${profile.id}@users.noreply.github.com`,
+                name: profile.name ?? profile.login
+            }),
         },
     },
 
