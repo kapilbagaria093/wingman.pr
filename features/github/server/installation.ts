@@ -1,6 +1,9 @@
 import { GithubInstallationStatus } from "@/features/dashboard/lib/types";
-import { getGithubApp } from "@/features/github/utils/github-app"
+import { getGithubApp } from "../utils/github-app";
 import { prisma } from "@/lib/db";
+import { getServerSession } from "@/features/auth/actions";
+import { redirect } from "next/navigation";
+import { DASHBOARD_ROUTES } from "@/features/dashboard/lib/routes";
 
 // the below function is used to get the installation status of the github app for a given userId. It checks if the user has installed the github app and returns the installation status along with the account login and installation date.
 // slug is used for organizations, while login is used for individual users as per the github api. So, we check for both and return the one that is available.
