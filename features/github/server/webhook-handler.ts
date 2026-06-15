@@ -1,5 +1,6 @@
 import { json } from "better-auth";
 import { getGithubApp } from "../utils/github-app";
+import { savePullRequest } from "@/features/reviews/server/save-pull-request";
 
 const REVIEWABLE_ACTIONS = ['opened', 'synchronize', 'reopened'];
 
@@ -48,7 +49,7 @@ export async function handleGithubWebhook(request: Request){
         return Response.json({ received: true })
     }
 
-    // const pullRequest = await savePullRequest(event);
+    const pullRequest = await savePullRequest(event);
 
     // todo: add- map github's installation id
     // todo: trigger review job, which doesnt exist rn.
