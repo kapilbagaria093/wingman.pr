@@ -52,7 +52,7 @@ export async function handleGithubWebhook(request: Request){
     const pullRequest = await savePullRequest(event);
 
     // todo: add- map github's installation id
-    // todo: trigger review job, which doesnt exist rn.
+    // todo: trigger review job, which doesnt exist rn. (inngest)
 
     return Response.json({ received: true })
 }

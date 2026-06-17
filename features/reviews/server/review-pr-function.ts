@@ -49,7 +49,7 @@ export const reviewPullRequest = inngest.createFunction(
             return generateReview({
                 repoFullName: pullRequest.repoFullName,
                 title: pullRequest.title
-            })
+            }) 
         })
 
         await step.run("post-pr-comment", async () => {

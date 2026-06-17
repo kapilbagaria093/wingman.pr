@@ -13,6 +13,14 @@ function builtSignInCallbackUrl(installationId: string|null){
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
+    // new URL() parses the request url as a url and makes a object which has:
+    // parsedUrl.protocol   // "https:"
+    // parsedUrl.hostname   // "example.com"
+    // parsedUrl.pathname   // "/api/repos"
+    // parsedUrl.search     // "?page=2&sort=stars"
+    // parsedUrl.searchParams
+    // we are destructuring it to get search params, in which we can use .get to get a specific search parameter.
+    
     const installationId = searchParams.get("installation_id")
     const session = await getServerSession();
 
