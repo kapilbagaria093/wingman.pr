@@ -1,8 +1,7 @@
-import { openrouter } from "@openrouter/ai-sdk-provider";
 import { generateText } from "ai";
+import { openrouter } from "@/features/ai"; 
 
-
-const REVIEW_MODEL = "openrouter/free";
+const REVIEW_MODEL = "openrouter/free"
 
 const SYSTEM_PROMPT = `You are an expert code reviewer with deep knowledge of software engineering best practices, security, and performance optimization.
 
@@ -40,14 +39,19 @@ Then use this structure if there are findings:
 - Be specific: reference the relevant code, function names, or line context
 - Be constructive: explain *why* something is a problem and suggest a fix
 - Be proportional: don't nitpick minor style issues if there are real bugs
-- If the diff looks clean with no concerns, say so clearly in 1-2 sentences — do not invent problems
+- If the diff looks clean with no concerns, say so clearly in 1–2 sentences — do not invent problems
 - Tailor feedback to the repository language and conventions visible in the diff`;
+
 
 type ReviewInput = {
     repoFullName: string;
     title: string;
-    // diff: string;
+    /** Chunks retrieved from the PR's Pinecone namespace */
+    contextSnippets: string[];
+    /** Optional chunks from repo-sync namespace (full codebase context) */
+    repoContextSnippets: string[];
 };
+
 
 function buildRepoContextSection(repoContextSnippets: string[]) {
     if (repoContextSnippets.length === 0) {
@@ -57,22 +61,25 @@ function buildRepoContextSection(repoContextSnippets: string[]) {
     const repoContext = repoContextSnippets.join("\n\n---\n\n");
 
     return `
-
-Related code from the repository (for context only, not part of the change):
-
-${repoContext}`;
+  
+  Related code from the repository (for context only, not part of the change):
+  
+  ${repoContext}`;
 }
 
 export async function generateReview(input: ReviewInput) {
+    const context = input.contextSnippets.join("\n\n---\n\n");
+    const repoContextSection = buildRepoContextSection(input.repoContextSnippets);
+
     const { text } = await generateText({
         model: openrouter(REVIEW_MODEL),
         system: SYSTEM_PROMPT,
         prompt: `Repository: ${input.repoFullName}
-Pull request title: ${input.title}`
-
-// ## Changed files (unified diff)
-
-// ${input.diff}${buildRepoContextSection([])}`,
+  Pull request title: ${input.title}
+  
+  Code changes:
+  
+  ${context}${repoContextSection}`,
     });
 
     return text;

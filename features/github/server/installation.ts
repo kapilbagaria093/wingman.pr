@@ -89,3 +89,16 @@ export async function getUserIdByInstallationId(installationId: number) {
 
     return instalation.userId;
 }
+
+export async function getUserInstallationId(userId: string) {
+    const installation = await prisma.githubInstallation.findUnique({
+        where: { userId },
+        select: { installationId: true },
+    });
+
+    if (!installation) {
+        return null;
+    }
+
+    return installation.installationId;
+}
