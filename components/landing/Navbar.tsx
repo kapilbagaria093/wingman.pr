@@ -28,6 +28,9 @@ export function Navbar() {
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-2"
+          style={{
+            border: 0
+          }}
         >
           <span
             className="inline-flex items-center justify-center w-9 h-9 text-white text-sm font-black"
